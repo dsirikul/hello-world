@@ -2,7 +2,7 @@
 title: "DSE3101_Week2"
 author: "tong"
 date: "2024-01-24"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
