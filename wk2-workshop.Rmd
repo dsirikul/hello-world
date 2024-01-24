@@ -9,22 +9,39 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Read in data
+```{r}
+df = readRDS("data/wk2_stocks.rds")
+str(df)
+```
+## Statistics on returns
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+sum(df$SPY_returns)*100
+mean(df$SPY_returns)*100
+sd(df$SPY_returns)*100
 ```
 
-## Including Plots
++ The cumulative returns of the S&P index during this period is `r round(sum(df$SPY_returns)*100, 2)`%
 
-You can also embed plots, for example:
++ The average daily returns of the S&P index during this period is `r round(mean(df$SPY_returns)*100, 2)`%
 
-```{r pressure, echo=FALSE}
-plot(pressure)
++ The standard deviation of the daily returns of the S&P index during this period is `r round(sd(df$SPY_returns)*100, 2)`%
+
+## S&P Prices
+
+```{r}
+library(tidyverse)
+ggplot(data = df, aes(x = date, y = SPY_prices)) +
+  geom_line()
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+df %>% mutate(year = year(date)) %>%
+  filter(year <= 2023) %>%
+  group_by(year) %>%
+  summarize(yr_return = sum(SPY_returns)*100) %>%
+  ggplot(aes(x = year, y = yr_return)) +
+  geom_col()
+```
